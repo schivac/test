@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Laporan - Police RP Panel</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0b1335;
+    color: #e0e7ff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a {
+    color: #79b8ff;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  /* Container */
+  .container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1rem 1.5rem;
+    flex: 1 0 auto;
+  }
+  header {
+    background: #142563;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    border-bottom: 3px solid #2c59ff;
+    user-select: none;
+  }
+  header h1 {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #79b8ff;
+    letter-spacing: 2px;
+    margin: 0;
+  }
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .tab-btn {
+    background: #1a237e;
+    border: none;
+    border-radius: 8px 8px 0 0;
+    color: #82aaff;
+    font-weight: 700;
+    padding: 0.7rem 1.2rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  .tab-btn.active,
+  .tab-btn:hover {
+    background: #2c59ff;
+    color: #e0e7ff;
+  }
+  /* Sections */
+  section.report-section {
+    background: #1a237e;
+    border-radius: 12px;
+    padding: 1.8rem 2rem;
+    box-shadow: 0 0 20px #304ffeaa;
+  }
+  section.report-section:not(.active) {
+    display: none;
+  }
+  section.report-section h2 {
+    margin-top: 0;
+    color: #82aaff;
+    font-weight: 900;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  /* Forms */
+  form.report-form {
+    max-width: 700px;
+    margin: 1rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  label {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  input[type="text"], input[type="date"], input[type="number"], select, textarea {
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 100px;
+  }
+  button.submit-btn {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    background: #2c59ff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+    max-width: 200px;
+  }
+  button.submit-btn:hover {
+    background: #1a40d1;
+  }
+  /* Report lists */
+  .report-list {
+    margin-top: 2rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .report-item {
+    background: #283593;
+    border-radius: 8px;
+    padding: 1rem 1rem;
+    margin-bottom: 0.9rem;
+    color: #d0d7ff;
+  }
+  .report-item h4 {
+    margin: 0 0 0.3rem 0;
+    color: #a3bffa;
+  }
+  .report-item small {
+    font-size: 0.8rem;
+    color: #bbc5ffcc;
+  }
+  /* Delete Btn */
+  button.delete-btn {
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    float: right;
+  }
+  button.delete-btn:hover {
+    background: #db3232;
+  }
+  /* Toast notifications */
+  #toastContainer {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .toast {
+    background: #2c59ff;
+    color: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 6px;
+    box-shadow: 0 0 8px #2c59ffbb;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slideIn 0.4s forwards, fadeOut 0.4s 4s forwards;
+    min-width: 260px;
+  }
+  @keyframes slideIn {
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+  footer {
+    text-align: center;
+    padding: 1rem;
+    color: #5c6bc0aa;
+    font-size: 0.9rem;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  /* Responsive */
+  @media (max-width: 720px) {
+    form.report-form {
+      padding: 0 1rem;
+    }
+    .tabs {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .tab-btn {
+      width: 100%;
+      border-radius: 8px;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>LAPORAN POLICE RP PANEL</h1>
+</header>
+
+<div class="container" role="main">
+  <nav class="tabs" aria-label="Laporan types navigation">
+    <button class="tab-btn active" data-tab="sim">Laporan SIM</button>
+    <button class="tab-btn" data-tab="skck">Laporan SKCK</button>
+    <button class="tab-btn" data-tab="samsat">Laporan Samsat</button>
+    <button class="tab-btn" data-tab="penahanan">Laporan Penahanan</button>
+  </nav>
+
+  <section id="sim" class="report-section active" aria-labelledby="simLabel" role="region" tabindex="0">
+    <h2 id="simLabel">Laporan SIM</h2>
+    <form id="simForm" class="report-form" aria-label="Laporan SIM form">
+      <label for="simName">Nama Pemohon</label>
+      <input type="text" id="simName" name="simName" placeholder="Masukkan nama lengkap" required autocomplete="off" />
+      
+      <label for="simType">Tipe SIM</label>
+      <select id="simType" name="simType" required>
+        <option value="" disabled selected>Pilih tipe SIM</option>
+        <option value="SIM A">SIM A</option>
+        <option value="SIM B1">SIM B1</option>
+        <option value="SIM B2">SIM B2</option>
+        <option value="SIM C">SIM C</option>
+      </select>
+
+      <label for="simDate">Tanggal Pengajuan</label>
+      <input type="date" id="simDate" name="simDate" required />
+
+      <button type="submit" class="submit-btn">Submit Laporan SIM</button>
+    </form>
+    <div class="report-list" id="simReportsList" aria-live="polite" aria-atomic="true"></div>
+  </section>
+
+  <section id="skck" class="report-section" aria-labelledby="skckLabel" role="region" tabindex="0">
+    <h2 id="skckLabel">Laporan SKCK</h2>
+    <form id="skckForm" class="report-form" aria-label="Laporan SKCK form">
+      <label for="skckName">Nama Pemohon</label>
+      <input type="text" id="skckName" name="skckName" placeholder="Masukkan nama lengkap" required autocomplete="off" />
+
+      <label for="skckPurpose">Tujuan SKCK</label>
+      <input type="text" id="skckPurpose" name="skckPurpose" placeholder="Masukkan tujuan pengajuan" required autocomplete="off" />
+
+      <label for="skckDate">Tanggal Pengajuan</label>
+      <input type="date" id="skckDate" name="skckDate" required />
+
+      <button type="submit" class="submit-btn">Submit Laporan SKCK</button>
+    </form>
+    <div class="report-list" id="skckReportsList" aria-live="polite" aria-atomic="true"></div>
+  </section>
+
+  <section id="samsat" class="report-section" aria-labelledby="samsatLabel" role="region" tabindex="0">
+    <h2 id="samsatLabel">Laporan Samsat</h2>
+    <form id="samsatForm" class="report-form" aria-label="Laporan Samsat form">
+      <label for="samsatOwner">Nama Pemilik Kendaraan</label>
+      <input type="text" id="samsatOwner" name="samsatOwner" placeholder="Masukkan nama lengkap" required autocomplete="off" />
+
+      <label for="samsatVehicle">Merk/Kendaraan</label>
+      <input type="text" id="samsatVehicle" name="samsatVehicle" placeholder="Masukkan merk/jenis kendaraan" required autocomplete="off" />
+
+      <label for="samsatPlate">Nomor Polisi</label>
+      <input type="text" id="samsatPlate" name="samsatPlate" placeholder="Masukkan nomor polisi" required autocomplete="off" />
+
+      <label for="samsatDate">Tanggal Pengajuan</label>
+      <input type="date" id="samsatDate" name="samsatDate" required />
+
+      <button type="submit" class="submit-btn">Submit Laporan Samsat</button>
+    </form>
+    <div class="report-list" id="samsatReportsList" aria-live="polite" aria-atomic="true"></div>
+  </section>
+
+  <section id="penahanan" class="report-section" aria-labelledby="penahananLabel" role="region" tabindex="0">
+    <h2 id="penahananLabel">Laporan Penahanan</h2>
+    <form id="penahananForm" class="report-form" aria-label="Laporan Penahanan form">
+      <label for="penahananSuspect">Nama Tersangka</label>
+      <input type="text" id="penahananSuspect" name="penahananSuspect" placeholder="Masukkan nama tersangka" required autocomplete="off" />
+
+      <label for="penahananReason">Alasan Penahanan</label>
+      <textarea id="penahananReason" name="penahananReason" placeholder="Jelaskan alasan penahanan" required></textarea>
+
+      <label for="penahananDate">Tanggal Penahanan</label>
+      <input type="date" id="penahananDate" name="penahananDate" required />
+
+      <button type="submit" class="submit-btn">Submit Laporan Penahanan</button>
+    </form>
+    <div class="report-list" id="penahananReportsList" aria-live="polite" aria-atomic="true"></div>
+  </section>
+</div>
+
+<!-- Toast notification container -->
+<div id="toastContainer" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+<footer>
+  &copy; 2024 Police RP Panel. All rights reserved.
+</footer>
+
+<script>
+  // Tabs toggle
+  const tabs = document.querySelectorAll('.tab-btn');
+  const reports = document.querySelectorAll('section.report-section');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      if (tab.classList.contains('active')) return;
+      // Deactivate all tabs and sections
+      tabs.forEach(t => t.classList.remove('active'));
+      reports.forEach(r => r.classList.remove('active'));
+      // Activate the clicked tab and associated section
+      tab.classList.add('active');
+      const target = tab.getAttribute('data-tab');
+      const activeSection = document.getElementById(target);
+      if (activeSection) activeSection.classList.add('active');
+      activeSection.focus();
+    });
+  });
+
+  // Toast notification system
+  const toastContainer = document.getElementById('toastContainer');
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('hide');
+      toast.addEventListener('animationend', () => {
+        toast.remove();
+      });
+    }, 4500);
+  }
+
+  // Storage keys for separate reports
+  const STORAGE_KEYS = {
+    SIM: 'prp_laporan_sim',
+    SKCK: 'prp_laporan_skck',
+    SAMSAT: 'prp_laporan_samsat',
+    PENAHANAN: 'prp_laporan_penahanan'
+  };
+
+  // Utility to get/save reports to localStorage
+  function getReports(key) {
+    const data = localStorage.getItem(key);
+    if (!data) return [];
+    try {
+      return JSON.parse(data);
+    } catch {
+      return [];
+    }
+  }
+  function saveReports(key, arr) {
+    localStorage.setItem(key, JSON.stringify(arr));
+  }
+
+  // Common rendering function for report lists
+  function renderReportList(containerId, reports, fieldsToShow) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    if (reports.length === 0) {
+      container.innerHTML = '<p style="text-align:center; color:#a3bffa;">Belum ada laporan.</p>';
+      return;
+    }
+    reports.forEach((report, idx) => {
+      const div = document.createElement('div');
+      div.className = 'report-item';
+      let contentHTML = '';
+      fieldsToShow.forEach(field => {
+        if(report[field.key]){
+          contentHTML += `<p><strong>${field.label}:</strong> ${report[field.key]}</p>`;
+        }
+      });
+      contentHTML += `<small>Diajukan pada ${new Date(report.timestamp).toLocaleString()}</small>`;
+      div.innerHTML = `<h4>${report.title || ''}</h4>${contentHTML}`;
+      // Delete button
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-btn';
+      delBtn.textContent = 'Hapus';
+      delBtn.setAttribute('aria-label', `Hapus laporan nomor ${idx + 1}`);
+      delBtn.addEventListener('click', () => {
+        const confirmed = confirm('Hapus laporan ini?');
+        if (confirmed) {
+          reports.splice(idx, 1);
+          saveReports(containerId, reports);
+          renderReportList(containerId, reports, fieldsToShow);
+          showToast('Laporan berhasil dihapus');
+        }
+      });
+      div.appendChild(delBtn);
+      container.appendChild(div);
+    });
+  }
+
+  // --- SIM Laporan ---
+  const simForm = document.getElementById('simForm');
+  const simKey = STORAGE_KEYS.SIM;
+  const simReportsListId = 'simReportsList';
+
+  simForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = simForm.simName.value.trim();
+    const type = simForm.simType.value;
+    const date = simForm.simDate.value;
+    if (!name || !type || !date) {
+      alert('Mohon isi semua bidang dengan benar.');
+      return;
+    }
+    const reports = getReports(simKey);
+    reports.unshift({
+      title: `Permohonan SIM ${type}`,
+      name,
+      type,
+      date,
+      timestamp: Date.now()
+    });
+    saveReports(simKey, reports);
+    renderSimReports();
+    simForm.reset();
+    showToast('Laporan SIM berhasil disubmit.');
+  });
+  function renderSimReports() {
+    const reports = getReports(simKey);
+    renderReportList(simReportsListId, reports, [
+      { key: 'name', label: 'Nama Pemohon' },
+      { key: 'type', label: 'Tipe SIM' },
+      { key: 'date', label: 'Tanggal Pengajuan' }
+    ]);
+  }
+  renderSimReports();
+
+  // --- SKCK Laporan ---
+  const skckForm = document.getElementById('skckForm');
+  const skckKey = STORAGE_KEYS.SKCK;
+  const skckReportsListId = 'skckReportsList';
+
+  skckForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = skckForm.skckName.value.trim();
+    const purpose = skckForm.skckPurpose.value.trim();
+    const date = skckForm.skckDate.value;
+    if (!name || !purpose || !date) {
+      alert('Mohon isi semua bidang dengan benar.');
+      return;
+    }
+    const reports = getReports(skckKey);
+    reports.unshift({
+      title: `Pengajuan SKCK`,
+      name,
+      purpose,
+      date,
+      timestamp: Date.now()
+    });
+    saveReports(skckKey, reports);
+    renderSkckReports();
+    skckForm.reset();
+    showToast('Laporan SKCK berhasil disubmit.');
+  });
+  function renderSkckReports() {
+    const reports = getReports(skckKey);
+    renderReportList(skckReportsListId, reports, [
+      { key: 'name', label: 'Nama Pemohon' },
+      { key: 'purpose', label: 'Tujuan SKCK' },
+      { key: 'date', label: 'Tanggal Pengajuan' }
+    ]);
+  }
+  renderSkckReports();
+
+  // --- Samsat Laporan ---
+  const samsatForm = document.getElementById('samsatForm');
+  const samsatKey = STORAGE_KEYS.SAMSAT;
+  const samsatReportsListId = 'samsatReportsList';
+
+  samsatForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const owner = samsatForm.samsatOwner.value.trim();
+    const vehicle = samsatForm.samsatVehicle.value.trim();
+    const plate = samsatForm.samsatPlate.value.trim();
+    const date = samsatForm.samsatDate.value;
+    if (!owner || !vehicle || !plate || !date) {
+      alert('Mohon isi semua bidang dengan benar.');
+      return;
+    }
+    const reports = getReports(samsatKey);
+    reports.unshift({
+      title: 'Pengajuan Samsat',
+      owner,
+      vehicle,
+      plate,
+      date,
+      timestamp: Date.now()
+    });
+    saveReports(samsatKey, reports);
+    renderSamsatReports();
+    samsatForm.reset();
+    showToast('Laporan Samsat berhasil disubmit.');
+  });
+  function renderSamsatReports() {
+    const reports = getReports(samsatKey);
+    renderReportList(samsatReportsListId, reports, [
+      { key: 'owner', label: 'Nama Pemilik Kendaraan' },
+      { key: 'vehicle', label: 'Merk/Kendaraan' },
+      { key: 'plate', label: 'Nomor Polisi' },
+      { key: 'date', label: 'Tanggal Pengajuan' }
+    ]);
+  }
+  renderSamsatReports();
+
+  // --- Penahanan Laporan ---
+  const penahananForm = document.getElementById('penahananForm');
+  const penahananKey = STORAGE_KEYS.PENAHANAN;
+  const penahananReportsListId = 'penahananReportsList';
+
+  penahananForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const suspect = penahananForm.penahananSuspect.value.trim();
+    const reason = penahananForm.penahananReason.value.trim();
+    const date = penahananForm.penahananDate.value;
+    if (!suspect || !reason || !date) {
+      alert('Mohon isi semua bidang dengan benar.');
+      return;
+    }
+    const reports = getReports(penahananKey);
+    reports.unshift({
+      title: 'Laporan Penahanan',
+      suspect,
+      reason,
+      date,
+      timestamp: Date.now()
+    });
+    saveReports(penahananKey, reports);
+    renderPenahananReports();
+    penahananForm.reset();
+    showToast('Laporan Penahanan berhasil disubmit.');
+  });
+  function renderPenahananReports() {
+    const reports = getReports(penahananKey);
+    renderReportList(penahananReportsListId, reports, [
+      { key: 'suspect', label: 'Nama Tersangka' },
+      { key: 'reason', label: 'Alasan Penahanan' },
+      { key: 'date', label: 'Tanggal Penahanan' }
+    ]);
+  }
+  renderPenahananReports();
+</script>
+</body>
+</html>
+
