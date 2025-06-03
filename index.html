@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Police RP Panel</title>
+<style>
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0b1335;
+    color: #e0e7ff;
+  }
+  a {
+    color: #79b8ff;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  /* Container */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+  }
+  /* Header & nav */
+  header {
+    background: #142563;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #2c59ff;
+  }
+  header h1 {
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: #79b8ff;
+    user-select: none;
+  }
+  nav {
+    display: flex;
+    gap: 1rem;
+  }
+  nav button {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: #a3bffa;
+    padding: 0.5rem 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  nav button.active,
+  nav button:hover {
+    background: #2c59ff;
+    color: #e0e7ff;
+  }
+  /* Sections */
+  section {
+    display: none;
+    padding: 1.5rem 0;
+  }
+  section.active {
+    display: block;
+  }
+  /* Login form */
+  #loginSection form {
+    max-width: 380px;
+    margin: 2rem auto;
+    background: #1a237e;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 14px #304ffeaa;
+  }
+  #loginSection h2 {
+    margin-bottom: 1.2rem;
+    text-align: center;
+    color: #82aaff;
+  }
+  #loginSection label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  #loginSection input[type="text"],
+  #loginSection input[type="password"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 1.3rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  #loginSection button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #loginSection button:hover {
+    background: #1a40d1;
+  }
+
+  /* Dashboard */
+  #dashboardSection .stats-cards {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .card {
+    background: #1a237e;
+    padding: 1.4rem 2rem;
+    border-radius: 12px;
+    width: 220px;
+    text-align: center;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  .card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #82aaff;
+  }
+  .card p {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #c5cae9;
+  }
+
+  /* Officers List */
+  #officersSection {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #1a237e;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  #officersSection h2 {
+    text-align: center;
+    color: #82aaff;
+  }
+  form#addOfficerForm {
+    display: flex;
+    gap: 0.8rem;
+    margin: 1rem 0 1.5rem 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  form#addOfficerForm input {
+    flex: 1 1 45%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  form#addOfficerForm button {
+    flex: 1 1 100%;
+    background-color: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.7rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form#addOfficerForm button:hover {
+    background-color: #1a40d1;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e0e7ff;
+  }
+  thead tr {
+    border-bottom: 2px solid #2c59ff;
+  }
+  th, td {
+    padding: 0.8rem 0.7rem;
+    text-align: left;
+  }
+  tbody tr:nth-child(odd) {
+    background: #283593;
+  }
+  tbody tr:hover {
+    background: #3949ab;
+  }
+  button.delete-btn {
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button.delete-btn:hover {
+    background: #db3232;
+  }
+
+  /* Reports Section */
+  #reportsSection {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #1a237e;
+    padding: 1.5rem 1.8rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  #reportsSection h2 {
+    text-align: center;
+    color: #82aaff;
+  }
+  form#reportForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  label {
+    font-weight: 600;
+  }
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 90px;
+  }
+  button#submitReport {
+    background-color: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.8rem;
+    color: white;
+    cursor: pointer;
+    width: 150px;
+    align-self: center;
+    transition: background-color 0.3s ease;
+  }
+  button#submitReport:hover {
+    background-color: #1a40d1;
+  }
+  .report-list {
+    margin-top: 1rem;
+  }
+  .report-item {
+    background: #283593;
+    border-radius: 8px;
+    padding: 1rem 1rem;
+    margin-bottom: 0.9rem;
+  }
+  .report-item h4 {
+    margin: 0 0 0.3rem 0;
+    color: #a3bffa;
+  }
+  .report-item p {
+    margin: 0;
+    color: #d0d7ff;
+  }
+
+  /* Wanted Section */
+  #wantedSection {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #1a237e;
+    border-radius: 10px;
+    padding: 1.5rem 1.8rem;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  #wantedSection h2 {
+    text-align: center;
+    color: #82aaff;
+  }
+  form#wantedForm {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  form#wantedForm input {
+    flex: 1 1 45%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  form#wantedForm button {
+    flex: 1 1 100%;
+    background-color: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.7rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form#wantedForm button:hover {
+    background-color: #1a40d1;
+  }
+  ul#wantedList {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  ul#wantedList li {
+    background: #283593;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d0d7ff;
+  }
+  button.remove-wanted {
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button.remove-wanted:hover {
+    background: #db3232;
+  }
+
+  /* Vehicles Section */
+  #vehiclesSection {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #1a237e;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  #vehiclesSection h2 {
+    text-align: center;
+    color: #82aaff;
+  }
+  form#addVehicleForm {
+    display: flex;
+    gap: 0.8rem;
+    margin: 1rem 0 1.5rem 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  form#addVehicleForm input {
+    flex: 1 1 45%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  form#addVehicleForm button {
+    flex: 1 1 100%;
+    background-color: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.7rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form#addVehicleForm button:hover {
+    background-color: #1a40d1;
+  }
+  table#vehicleTable {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e0e7ff;
+  }
+  #vehicleTable thead tr {
+    border-bottom: 2px solid #2c59ff;
+  }
+  #vehicleTable th, #vehicleTable td {
+    padding: 0.8rem 0.7rem;
+    text-align: left;
+  }
+  #vehicleTable tbody tr:nth-child(odd) {
+    background: #283593;
+  }
+  #vehicleTable tbody tr:hover {
+    background: #3949ab;
+  }
+  button.delete-vehicle-btn {
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button.delete-vehicle-btn:hover {
+    background: #db3232;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin: 2rem 0 1rem 0;
+    color: #5c6bc0aa;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  /* Responsive */
+  @media (max-width: 700px) {
+    #officersSection, #reportsSection, #wantedSection, #vehiclesSection {
+      padding: 1rem 1rem;
+    }
+    nav {
+      font-size: 0.9rem;
+    }
+    form#addOfficerForm input,
+    form#wantedForm input,
+    form#addVehicleForm input {
+      flex: 1 1 100%;
+    }
+    form#addOfficerForm button,
+    form#wantedForm button,
+    form#addVehicleForm button {
+      flex: 1 1 100%;
+    }
+    .card {
+      width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>POLICE RP PANEL</h1>
+  <nav>
+    <button id="navLogin" class="active">Login</button>
+    <button id="navDashboard" disabled>Dashboard</button>
+    <button id="navOfficers" disabled>Officers</button>
+    <button id="navReports" disabled>Reports</button>
+    <button id="navWanted" disabled>Wanted List</button>
+    <button id="navVehicles" disabled>Vehicles</button>
+    <button id="navLogout" disabled>Logout</button>
+  </nav>
+</header>
+
+<div class="container">
+  <section id="loginSection" class="active" aria-label="Login Section">
+    <form id="loginForm" aria-label="Login form">
+      <h2>Officer Login</h2>
+      <label for="officerName">Name</label>
+      <input type="text" id="officerName" name="officerName" placeholder="Enter your name" required />
+      <label for="badgeNumber">Badge Number</label>
+      <input type="text" id="badgeNumber" name="badgeNumber" placeholder="Enter badge number" required />
+      <button type="submit">Login</button>
+    </form>
+  </section>
+
+  <section id="dashboardSection" aria-label="Dashboard Section">
+    <h2>Welcome, <span id="officerDisplayName">Officer</span></h2>
+    <div class="stats-cards" aria-live="polite">
+      <div class="card" aria-label="Total Officers">
+        <h3>Total Officers</h3>
+        <p id="totalOfficers">0</p>
+      </div>
+      <div class="card" aria-label="Total Reports">
+        <h3>Total Reports</h3>
+        <p id="totalReports">0</p>
+      </div>
+      <div class="card" aria-label="Wanted Criminals">
+        <h3>Wanted Criminals</h3>
+        <p id="totalWanted">0</p>
+      </div>
+      <div class="card" aria-label="Patrol Vehicles">
+        <h3>Patrol Vehicles</h3>
+        <p id="totalVehicles">0</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="officersSection" aria-label="Officers Section">
+    <h2>Officers List</h2>
+    <form id="addOfficerForm" aria-label="Add officer form">
+      <input type="text" id="newOfficerName" placeholder="Officer Name" required />
+      <input type="text" id="newOfficerBadge" placeholder="Badge Number" required />
+      <button type="submit">Add Officer</button>
+    </form>
+    <table aria-label="Officers table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Badge Number</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="officersTableBody"></tbody>
+    </table>
+  </section>
+
+  <section id="reportsSection" aria-label="Incident Reports Section">
+    <h2>Incident Reports</h2>
+    <form id="reportForm" aria-label="Incident report form">
+      <label for="reportTitle">Title</label>
+      <input type="text" id="reportTitle" placeholder="Report title" required />
+      <label for="reportDesc">Description</label>
+      <textarea id="reportDesc" placeholder="Describe the incident" required></textarea>
+      <button type="submit" id="submitReport">Submit Report</button>
+    </form>
+    <div class="report-list" aria-live="polite" id="reportsList"></div>
+  </section>
+
+  <section id="wantedSection" aria-label="Wanted List Section">
+    <h2>Wanted List</h2>
+    <form id="wantedForm" aria-label="Add to wanted list form">
+      <input type="text" id="wantedName" placeholder="Criminal Name" required />
+      <input type="text" id="wantedCrime" placeholder="Crime" required />
+      <button type="submit">Add Wanted</button>
+    </form>
+    <ul id="wantedList"></ul>
+  </section>
+
+  <section id="vehiclesSection" aria-label="Vehicles Section">
+    <h2>Patrol Vehicles</h2>
+    <form id="addVehicleForm" aria-label="Add patrol vehicle form">
+      <input type="text" id="vehicleModel" placeholder="Vehicle Model" required />
+      <input type="text" id="vehiclePlate" placeholder="License Plate" required />
+      <button type="submit">Add Vehicle</button>
+    </form>
+    <table id="vehicleTable" aria-label="Patrol vehicles table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>License Plate</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="vehiclesTableBody"></tbody>
+    </table>
+  </section>
+</div>
+
+<footer>
+  &copy; 2024 Police RP Panel. All rights reserved.
+</footer>
+
+<script>
+  // Elements references
+  const navLogin = document.getElementById('navLogin');
+  const navDashboard = document.getElementById('navDashboard');
+  const navOfficers = document.getElementById('navOfficers');
+  const navReports = document.getElementById('navReports');
+  const navWanted = document.getElementById('navWanted');
+  const navVehicles = document.getElementById('navVehicles');
+  const navLogout = document.getElementById('navLogout');
+
+  const sections = {
+    login: document.getElementById('loginSection'),
+    dashboard: document.getElementById('dashboardSection'),
+    officers: document.getElementById('officersSection'),
+    reports: document.getElementById('reportsSection'),
+    wanted: document.getElementById('wantedSection'),
+    vehicles: document.getElementById('vehiclesSection'),
+  };
+
+  const loginForm = document.getElementById('loginForm');
+  const officerDisplayName = document.getElementById('officerDisplayName');
+
+  // Storage keys for data
+  const STORAGE = {
+    USER: 'prp_user',
+    OFFICERS: 'prp_officers',
+    REPORTS: 'prp_reports',
+    WANTED: 'prp_wanted',
+    VEHICLES: 'prp_vehicles'
+  };
+
+  // Navigation buttons array for easy disable-enable
+  const navButtons = [navLogin, navDashboard, navOfficers, navReports, navWanted, navVehicles, navLogout];
+
+  function showSection(name) {
+    for (const key in sections) {
+      if (key === name) {
+        sections[key].classList.add('active');
+      } else {
+        sections[key].classList.remove('active');
+      }
+    }
+    // Update nav active states
+    navButtons.forEach(btn => btn.classList.remove('active'));
+    switch (name) {
+      case 'login':
+        navLogin.classList.add('active'); break;
+      case 'dashboard':
+        navDashboard.classList.add('active'); break;
+      case 'officers':
+        navOfficers.classList.add('active'); break;
+      case 'reports':
+        navReports.classList.add('active'); break;
+      case 'wanted':
+        navWanted.classList.add('active'); break;
+      case 'vehicles':
+        navVehicles.classList.add('active'); break;
+    }
+  }
+
+  function setLoggedInUI(user) {
+    officerDisplayName.textContent = user.name;
+    navDashboard.disabled = false;
+    navOfficers.disabled = false;
+    navReports.disabled = false;
+    navWanted.disabled = false;
+    navVehicles.disabled = false;
+    navLogout.disabled = false;
+    navLogin.disabled = true;
+  }
+
+  function setLoggedOutUI() {
+    navDashboard.disabled = true;
+    navOfficers.disabled = true;
+    navReports.disabled = true;
+    navWanted.disabled = true;
+    navVehicles.disabled = true;
+    navLogout.disabled = true;
+    navLogin.disabled = false;
+  }
+
+  // Initialization function
+  function init() {
+    const savedUser = JSON.parse(localStorage.getItem(STORAGE.USER));
+    if (savedUser && savedUser.name && savedUser.badge) {
+      setLoggedInUI(savedUser);
+      showSection('dashboard');
+      updateAllData();
+    } else {
+      setLoggedOutUI();
+      showSection('login');
+    }
+  }
+
+  // Event handlers for navigation
+  navLogin.addEventListener('click', () => {
+    showSection('login');
+  });
+  navDashboard.addEventListener('click', () => {
+    showSection('dashboard');
+    updateDashboard();
+  });
+  navOfficers.addEventListener('click', () => {
+    showSection('officers');
+    renderOfficers();
+  });
+  navReports.addEventListener('click', () => {
+    showSection('reports');
+    renderReports();
+  });
+  navWanted.addEventListener('click', () => {
+    showSection('wanted');
+    renderWanted();
+  });
+  navVehicles.addEventListener('click', () => {
+    showSection('vehicles');
+    renderVehicles();
+  });
+  navLogout.addEventListener('click', () => {
+    localStorage.removeItem(STORAGE.USER);
+    setLoggedOutUI();
+    showSection('login');
+  });
+
+  // Login form submit
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = loginForm.officerName.value.trim();
+    const badge = loginForm.badgeNumber.value.trim();
+    if (name && badge) {
+      const user = { name, badge };
+      localStorage.setItem(STORAGE.USER, JSON.stringify(user));
+      setLoggedInUI(user);
+      showSection('dashboard');
+      updateAllData();
+      loginForm.reset();
+    }
+  });
+
+  // ========== Officers Section ==========
+  const addOfficerForm = document.getElementById('addOfficerForm');
+  const officersTableBody = document.getElementById('officersTableBody');
+
+  function getOfficers() {
+    const officers = JSON.parse(localStorage.getItem(STORAGE.OFFICERS));
+    return Array.isArray(officers) ? officers : [];
+  }
+  function saveOfficers(officers) {
+    localStorage.setItem(STORAGE.OFFICERS, JSON.stringify(officers));
+  }
+  function renderOfficers() {
+    const officers = getOfficers();
+    officersTableBody.innerHTML = '';
+    if (officers.length === 0) {
+      officersTableBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#a3bffa;">No officers added yet.</td></tr>';
+      return;
+    }
+    officers.forEach((officer, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${officer.name}</td>
+        <td>${officer.badge}</td>
+        <td><button aria-label="Delete officer ${officer.name}" class="delete-btn" data-index="${index}">Delete</button></td>
+      `;
+      officersTableBody.appendChild(tr);
+    });
+    // Hook delete buttons
+    const deleteButtons = officersTableBody.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = e.target.getAttribute('data-index');
+        if (idx !== null) {
+          const confirmed = confirm('Are you sure you want to delete this officer?');
+          if (confirmed) {
+            officers.splice(idx,1);
+            saveOfficers(officers);
+            renderOfficers();
+            updateDashboard();
+          }
+        }
+      });
+    });
+  }
+
+  addOfficerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('newOfficerName').value.trim();
+    const badge = document.getElementById('newOfficerBadge').value.trim();
+    if (name && badge) {
+      let officers = getOfficers();
+      if (officers.find(o => o.badge === badge)) {
+        alert('Badge number already exists!');
+        return;
+      }
+      officers.push({ name, badge });
+      saveOfficers(officers);
+      addOfficerForm.reset();
+      renderOfficers();
+      updateDashboard();
+    }
+  });
+
+  // ========== Reports Section ==========
+  const reportForm = document.getElementById('reportForm');
+  const reportsList = document.getElementById('reportsList');
+
+  function getReports() {
+    const reports = JSON.parse(localStorage.getItem(STORAGE.REPORTS));
+    return Array.isArray(reports) ? reports : [];
+  }
+  function saveReports(reports) {
+    localStorage.setItem(STORAGE.REPORTS, JSON.stringify(reports));
+  }
+  function renderReports() {
+    const reports = getReports();
+    reportsList.innerHTML = '';
+    if (reports.length === 0) {
+      reportsList.innerHTML = '<p style="text-align:center; color:#a3bffa;">No reports submitted yet.</p>';
+      return;
+    }
+    reports.forEach((report, index) => {
+      const div = document.createElement('div');
+      div.className = 'report-item';
+      div.innerHTML = `
+        <h4>${report.title}</h4>
+        <p>${report.description}</p>
+        <small>Reported by: ${report.reportedBy} on ${new Date(report.timestamp).toLocaleString()}</small>
+      `;
+      reportsList.appendChild(div);
+    });
+  }
+  reportForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = document.getElementById('reportTitle').value.trim();
+    const desc = document.getElementById('reportDesc').value.trim();
+    if (title && desc) {
+      const reports = getReports();
+      const user = JSON.parse(localStorage.getItem(STORAGE.USER));
+      reports.unshift({
+        title,
+        description: desc,
+        reportedBy: user ? user.name : 'Unknown',
+        timestamp: Date.now()
+      });
+      saveReports(reports);
+      renderReports();
+      reportForm.reset();
+      updateDashboard();
+      alert('Report submitted successfully.');
+    }
+  });
+
+  // ========== Wanted Section ==========
+  const wantedForm = document.getElementById('wantedForm');
+  const wantedList = document.getElementById('wantedList');
+
+  function getWanted() {
+    const wanted = JSON.parse(localStorage.getItem(STORAGE.WANTED));
+    return Array.isArray(wanted) ? wanted : [];
+  }
+  function saveWanted(wanted) {
+    localStorage.setItem(STORAGE.WANTED, JSON.stringify(wanted));
+  }
+  function renderWanted() {
+    const wanted = getWanted();
+    wantedList.innerHTML = '';
+    if (wanted.length === 0) {
+      wantedList.innerHTML = '<li style="text-align:center; color:#a3bffa;">No wanted criminals.</li>';
+      return;
+    }
+    wanted.forEach((w, index) => {
+      const li = document.createElement('li');
+      li.textContent = `${w.name} - Crime: ${w.crime}`;
+      const btn = document.createElement('button');
+      btn.className = 'remove-wanted';
+      btn.setAttribute('aria-label', `Remove wanted criminal ${w.name}`);
+      btn.textContent = 'Remove';
+      btn.addEventListener('click', () => {
+        const confirmed = confirm(`Remove ${w.name} from wanted list?`);
+        if (confirmed) {
+          wanted.splice(index, 1);
+          saveWanted(wanted);
+          renderWanted();
+          updateDashboard();
+        }
+      });
+      li.appendChild(btn);
+      wantedList.appendChild(li);
+    });
+  }
+  wantedForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('wantedName').value.trim();
+    const crime = document.getElementById('wantedCrime').value.trim();
+    if (name && crime) {
+      const wanted = getWanted();
+      wanted.push({ name, crime });
+      saveWanted(wanted);
+      wantedForm.reset();
+      renderWanted();
+      updateDashboard();
+    }
+  });
+
+  // ========== Vehicles Section ==========
+  const addVehicleForm = document.getElementById('addVehicleForm');
+  const vehiclesTableBody = document.getElementById('vehiclesTableBody');
+
+  function getVehicles() {
+    const vehicles = JSON.parse(localStorage.getItem(STORAGE.VEHICLES));
+    return Array.isArray(vehicles) ? vehicles : [];
+  }
+  function saveVehicles(vehicles) {
+    localStorage.setItem(STORAGE.VEHICLES, JSON.stringify(vehicles));
+  }
+  function renderVehicles() {
+    const vehicles = getVehicles();
+    vehiclesTableBody.innerHTML = '';
+    if (vehicles.length === 0) {
+      vehiclesTableBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#a3bffa;">No patrol vehicles added yet.</td></tr>';
+      return;
+    }
+    vehicles.forEach((vehicle, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${vehicle.model}</td>
+        <td>${vehicle.plate}</td>
+        <td><button aria-label="Delete vehicle ${vehicle.model}" class="delete-vehicle-btn" data-index="${index}">Delete</button></td>
+      `;
+      vehiclesTableBody.appendChild(tr);
+    });
+    const deleteVehicleButtons = vehiclesTableBody.querySelectorAll('.delete-vehicle-btn');
+    deleteVehicleButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = e.target.getAttribute('data-index');
+        if (idx !== null) {
+          const confirmed = confirm('Are you sure you want to delete this vehicle?');
+          if (confirmed) {
+            vehicles.splice(idx, 1);
+            saveVehicles(vehicles);
+            renderVehicles();
+            updateDashboard();
+          }
+        }
+      });
+    });
+  }
+  addVehicleForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const model = document.getElementById('vehicleModel').value.trim();
+    const plate = document.getElementById('vehiclePlate').value.trim();
+    if (model && plate) {
+      let vehicles = getVehicles();
+      if (vehicles.find(v => v.plate === plate)) {
+        alert('License plate already exists!');
+        return;
+      }
+      vehicles.push({ model, plate });
+      saveVehicles(vehicles);
+      addVehicleForm.reset();
+      renderVehicles();
+      updateDashboard();
+    }
+  });
+
+  // Update dashboard stats
+  const totalOfficersElem = document.getElementById('totalOfficers');
+  const totalReportsElem = document.getElementById('totalReports');
+  const totalWantedElem = document.getElementById('totalWanted');
+  const totalVehiclesElem = document.getElementById('totalVehicles');
+
+  function updateDashboard() {
+    const totalOfficers = getOfficers().length;
+    const totalReports = getReports().length;
+    const totalWanted = getWanted().length;
+    const totalVehicles = getVehicles().length;
+    totalOfficersElem.textContent = totalOfficers;
+    totalReportsElem.textContent = totalReports;
+    totalWantedElem.textContent = totalWanted;
+    totalVehiclesElem.textContent = totalVehicles;
+  }
+
+  function updateAllData() {
+    updateDashboard();
+    renderOfficers();
+    renderReports();
+    renderWanted();
+    renderVehicles();
+  }
+
+  // Init on load
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+  });
+</script>
+</body>
+</html>
+
