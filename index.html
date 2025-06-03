@@ -363,7 +363,134 @@
   button.delete-vehicle-btn:hover {
     background: #db3232;
   }
-  /* Notifications (toasts) */
+  /* Laporan Section */
+  #laporanSection {
+    max-width: 900px;
+    margin: 1rem auto 2rem auto;
+    background: #1a237e;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 0 22px #304ffeaa;
+  }
+  #laporanSection h2 {
+    text-align: center;
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: #7eaaff;
+    margin-bottom: 1.2rem;
+  }
+  /* Tabs */
+  .tabs {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .tab-btn {
+    background: #283593;
+    border: none;
+    border-radius: 8px 8px 0 0;
+    color: #a3bffa;
+    font-weight: 700;
+    padding: 0.7rem 1.4rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    user-select: none;
+  }
+  .tab-btn.active,
+  .tab-btn:hover {
+    background: #2c59ff;
+    color: #e0e7ff;
+  }
+  section.report-tab {
+    background: #283593;
+    border-radius: 0 0 12px 12px;
+    padding: 1rem;
+    box-shadow: inset 0 0 12px #1a237e;
+  }
+  section.report-tab:not(.active) {
+    display: none;
+  }
+  /* Forms inside laporan */
+  form.report-form {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    color: #c7d0ff;
+  }
+  label {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+  input[type="text"], input[type="date"], input[type="number"], select, textarea {
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    resize: vertical;
+  }
+  textarea {
+    min-height: 90px;
+  }
+  button.submit-btn {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    background: #4169ff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: center;
+    max-width: 230px;
+  }
+  button.submit-btn:hover {
+    background: #1a40d1;
+  }
+  /* Report display lists */
+  .report-display {
+    max-width: 700px;
+    margin: 1rem auto 0 auto;
+    background: #1a237e;
+    border-radius: 8px;
+    padding: 1rem 1rem 1rem 1.2rem;
+    box-shadow: inset 0 0 15px #2c59ff88;
+    color: #c6d0ffcc;
+  }
+  .report-item {
+    border-bottom: 1px solid #3949ab;
+    padding: 0.6rem 0;
+    position: relative;
+  }
+  .report-item:last-child {
+    border-bottom: none;
+  }
+  .report-item strong {
+    color: #a3bffa;
+  }
+  .delete-report {
+    position: absolute;
+    right: 0.6rem;
+    top: 0.4rem;
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  .delete-report:hover {
+    background: #db3232;
+  }
+  /* Toast notifications */
   #toastContainer {
     position: fixed;
     top: 1rem;
@@ -383,7 +510,7 @@
     opacity: 0;
     transform: translateX(100%);
     animation: slideIn 0.4s forwards, fadeOut 0.4s 4s forwards;
-    min-width: 240px;
+    min-width: 260px;
   }
   @keyframes slideIn {
     to {
@@ -397,7 +524,6 @@
       transform: translateX(100%);
     }
   }
-  /* Footer */
   footer {
     text-align: center;
     margin: 2rem 0 1rem 0;
@@ -405,10 +531,10 @@
     font-size: 0.9rem;
     user-select: none;
   }
-  /* Responsive */
+  /* Responsive adjustments */
   @media (max-width: 700px) {
-    #officersSection, #wantedSection, #vehiclesSection {
-      padding: 1rem 1rem;
+    #officersSection, #wantedSection, #vehiclesSection, #laporanSection {
+      padding: 1rem;
     }
     nav {
       font-size: 0.9rem;
@@ -428,6 +554,10 @@
     .card {
       width: 100%;
     }
+    .tabs {
+      flex-direction: column;
+      gap: 0.8rem;
+    }
   }
 </style>
 </head>
@@ -438,7 +568,7 @@
     <button id="navLogin" class="active">Login</button>
     <button id="navDashboard" disabled>Dashboard</button>
     <button id="navOfficers" disabled>Officers</button>
-    <a id="navLaporan" href="laporan.html" target="_blank" rel="noopener" aria-disabled="true" class="disabled">Laporan</a>
+    <button id="navLaporan" disabled>Laporan</button>
     <button id="navWanted" disabled>Wanted List</button>
     <button id="navVehicles" disabled>Vehicles</button>
     <button id="navLogout" disabled>Logout</button>
@@ -494,6 +624,89 @@
     </table>
   </section>
 
+  <section id="laporanSection" aria-label="Laporan Section">
+    <h2>Laporan</h2>
+    <nav class="tabs" aria-label="Laporan tabs navigation">
+      <button class="tab-btn active" data-tab="laporanSim">Laporan SIM</button>
+      <button class="tab-btn" data-tab="laporanSkck">Laporan SKCK</button>
+      <button class="tab-btn" data-tab="laporanSamsat">Laporan Samsat</button>
+      <button class="tab-btn" data-tab="laporanPenahanan">Laporan Penahanan</button>
+    </nav>
+
+    <section id="laporanSim" class="report-tab active" aria-label="Laporan SIM tab">
+      <form id="simForm" class="report-form" aria-label="Laporan SIM form">
+        <label for="simName">Nama Pemohon</label>
+        <input type="text" id="simName" name="simName" placeholder="Masukkan nama lengkap" required autocomplete="off" />
+
+        <label for="simType">Tipe SIM</label>
+        <select id="simType" name="simType" required>
+          <option value="" disabled selected>Pilih tipe SIM</option>
+          <option value="SIM A">SIM A</option>
+          <option value="SIM B1">SIM B1</option>
+          <option value="SIM B2">SIM B2</option>
+          <option value="SIM C">SIM C</option>
+        </select>
+
+        <label for="simDate">Tanggal Pengajuan</label>
+        <input type="date" id="simDate" name="simDate" required />
+
+        <button type="submit" class="submit-btn">Submit Laporan SIM</button>
+      </form>
+      <div id="simReportsList" class="report-display" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <section id="laporanSkck" class="report-tab" aria-label="Laporan SKCK tab">
+      <form id="skckForm" class="report-form" aria-label="Laporan SKCK form">
+        <label for="skckName">Nama Pemohon</label>
+        <input type="text" id="skckName" name="skckName" placeholder="Masukkan nama lengkap" required autocomplete="off" />
+
+        <label for="skckPurpose">Tujuan SKCK</label>
+        <input type="text" id="skckPurpose" name="skckPurpose" placeholder="Masukkan tujuan pengajuan" required autocomplete="off" />
+
+        <label for="skckDate">Tanggal Pengajuan</label>
+        <input type="date" id="skckDate" name="skckDate" required />
+
+        <button type="submit" class="submit-btn">Submit Laporan SKCK</button>
+      </form>
+      <div id="skckReportsList" class="report-display" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <section id="laporanSamsat" class="report-tab" aria-label="Laporan Samsat tab">
+      <form id="samsatForm" class="report-form" aria-label="Laporan Samsat form">
+        <label for="samsatOwner">Nama Pemilik Kendaraan</label>
+        <input type="text" id="samsatOwner" name="samsatOwner" placeholder="Masukkan nama lengkap" required autocomplete="off" />
+
+        <label for="samsatVehicle">Merk/Kendaraan</label>
+        <input type="text" id="samsatVehicle" name="samsatVehicle" placeholder="Masukkan merk/jenis kendaraan" required autocomplete="off" />
+
+        <label for="samsatPlate">Nomor Polisi</label>
+        <input type="text" id="samsatPlate" name="samsatPlate" placeholder="Masukkan nomor polisi" required autocomplete="off" />
+
+        <label for="samsatDate">Tanggal Pengajuan</label>
+        <input type="date" id="samsatDate" name="samsatDate" required />
+
+        <button type="submit" class="submit-btn">Submit Laporan Samsat</button>
+      </form>
+      <div id="samsatReportsList" class="report-display" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <section id="laporanPenahanan" class="report-tab" aria-label="Laporan Penahanan tab">
+      <form id="penahananForm" class="report-form" aria-label="Laporan Penahanan form">
+        <label for="penahananSuspect">Nama Tersangka</label>
+        <input type="text" id="penahananSuspect" name="penahananSuspect" placeholder="Masukkan nama tersangka" required autocomplete="off" />
+
+        <label for="penahananReason">Alasan Penahanan</label>
+        <textarea id="penahananReason" name="penahananReason" placeholder="Jelaskan alasan penahanan" required></textarea>
+
+        <label for="penahananDate">Tanggal Penahanan</label>
+        <input type="date" id="penahananDate" name="penahananDate" required />
+
+        <button type="submit" class="submit-btn">Submit Laporan Penahanan</button>
+      </form>
+      <div id="penahananReportsList" class="report-display" aria-live="polite" aria-atomic="true"></div>
+    </section>
+  </section>
+
   <section id="wantedSection" aria-label="Wanted List Section">
     <h2>Wanted List</h2>
     <form id="wantedForm" aria-label="Add to wanted list form">
@@ -536,15 +749,16 @@
   const navLogin = document.getElementById('navLogin');
   const navDashboard = document.getElementById('navDashboard');
   const navOfficers = document.getElementById('navOfficers');
+  const navLaporan = document.getElementById('navLaporan');
   const navWanted = document.getElementById('navWanted');
   const navVehicles = document.getElementById('navVehicles');
   const navLogout = document.getElementById('navLogout');
-  const navLaporan = document.getElementById('navLaporan');
 
   const sections = {
     login: document.getElementById('loginSection'),
     dashboard: document.getElementById('dashboardSection'),
     officers: document.getElementById('officersSection'),
+    laporan: document.getElementById('laporanSection'),
     wanted: document.getElementById('wantedSection'),
     vehicles: document.getElementById('vehiclesSection'),
   };
@@ -561,7 +775,7 @@
   };
 
   // Navigation buttons array for easy disable-enable
-  const navButtons = [navLogin, navDashboard, navOfficers, navWanted, navVehicles, navLogout];
+  const navButtons = [navLogin, navDashboard, navOfficers, navLaporan, navWanted, navVehicles, navLogout];
 
   function showSection(name) {
     for (const key in sections) {
@@ -575,15 +789,23 @@
     navButtons.forEach(btn => btn.classList.remove('active'));
     switch (name) {
       case 'login':
-        navLogin.classList.add('active'); break;
+        navLogin.classList.add('active');
+        break;
       case 'dashboard':
-        navDashboard.classList.add('active'); break;
+        navDashboard.classList.add('active');
+        break;
       case 'officers':
-        navOfficers.classList.add('active'); break;
+        navOfficers.classList.add('active');
+        break;
+      case 'laporan':
+        navLaporan.classList.add('active');
+        break;
       case 'wanted':
-        navWanted.classList.add('active'); break;
+        navWanted.classList.add('active');
+        break;
       case 'vehicles':
-        navVehicles.classList.add('active'); break;
+        navVehicles.classList.add('active');
+        break;
     }
   }
 
@@ -591,25 +813,21 @@
     officerDisplayName.textContent = user.name;
     navDashboard.disabled = false;
     navOfficers.disabled = false;
+    navLaporan.disabled = false;
     navWanted.disabled = false;
     navVehicles.disabled = false;
     navLogout.disabled = false;
     navLogin.disabled = true;
-    navLaporan.setAttribute('aria-disabled', 'false');
-    navLaporan.classList.remove('disabled');
-    navLaporan.style.pointerEvents = 'auto';
   }
 
   function setLoggedOutUI() {
     navDashboard.disabled = true;
     navOfficers.disabled = true;
+    navLaporan.disabled = true;
     navWanted.disabled = true;
     navVehicles.disabled = true;
     navLogout.disabled = true;
     navLogin.disabled = false;
-    navLaporan.setAttribute('aria-disabled', 'true');
-    navLaporan.classList.add('disabled');
-    navLaporan.style.pointerEvents = 'none';
   }
 
   // Initialization function
@@ -636,6 +854,9 @@
   navOfficers.addEventListener('click', () => {
     showSection('officers');
     renderOfficers();
+  });
+  navLaporan.addEventListener('click', () => {
+    showSection('laporan');
   });
   navWanted.addEventListener('click', () => {
     showSection('wanted');
@@ -888,11 +1109,30 @@
     }, 4500);
   }
 
+
+  // Laporan tabs switching
+  const laporanTabs = document.querySelectorAll('#laporanSection .tab-btn');
+  const laporanTabsSections = document.querySelectorAll('#laporanSection .report-tab');
+
+  laporanTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      if(tab.classList.contains('active')) return;
+      laporanTabs.forEach(t => t.classList.remove('active'));
+      laporanTabsSections.forEach(s => s.classList.remove('active'));
+      tab.classList.add('active');
+      const id = tab.getAttribute('data-tab');
+      const section = document.getElementById(id);
+      if(section) section.classList.add('active');
+      section.focus();
+    });
+  });
+
   // Init on load
   document.addEventListener('DOMContentLoaded', () => {
     init();
   });
 </script>
+<script src="laporan.js"></script>
 </body>
 </html>
 
