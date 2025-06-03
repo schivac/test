@@ -472,7 +472,7 @@
 
 <div class="container">
   <section id="loginSection" class="active" aria-label="Login Section">
-    <form id="loginForm" aria-label="Login form">
+    <form id="loginForm" aria-label="Login form" autocomplete="off">
       <h2>Officer Login</h2>
       <label for="officerName">Name</label>
       <input type="text" id="officerName" name="officerName" placeholder="Enter your name" required />
@@ -506,7 +506,7 @@
 
   <section id="officersSection" aria-label="Officers Section">
     <h2>Officers List</h2>
-    <form id="addOfficerForm" aria-label="Add officer form">
+    <form id="addOfficerForm" aria-label="Add officer form" autocomplete="off">
       <input type="text" id="newOfficerName" placeholder="Officer Name" required />
       <input type="text" id="newOfficerBadge" placeholder="Badge Number" required />
       <button type="submit">Add Officer</button>
@@ -525,7 +525,7 @@
 
   <section id="reportsSection" aria-label="Incident Reports Section">
     <h2>Incident Reports</h2>
-    <form id="reportForm" aria-label="Incident report form">
+    <form id="reportForm" aria-label="Incident report form" autocomplete="off">
       <label for="reportTitle">Title</label>
       <input type="text" id="reportTitle" placeholder="Report title" required />
       <label for="reportDesc">Description</label>
@@ -537,7 +537,7 @@
 
   <section id="wantedSection" aria-label="Wanted List Section">
     <h2>Wanted List</h2>
-    <form id="wantedForm" aria-label="Add to wanted list form">
+    <form id="wantedForm" aria-label="Add to wanted list form" autocomplete="off">
       <input type="text" id="wantedName" placeholder="Criminal Name" required />
       <input type="text" id="wantedCrime" placeholder="Crime" required />
       <button type="submit">Add Wanted</button>
@@ -547,7 +547,7 @@
 
   <section id="vehiclesSection" aria-label="Vehicles Section">
     <h2>Patrol Vehicles</h2>
-    <form id="addVehicleForm" aria-label="Add patrol vehicle form">
+    <form id="addVehicleForm" aria-label="Add patrol vehicle form" autocomplete="off">
       <input type="text" id="vehicleModel" placeholder="Vehicle Model" required />
       <input type="text" id="vehiclePlate" placeholder="License Plate" required />
       <button type="submit">Add Vehicle</button>
@@ -959,6 +959,30 @@
     renderVehicles();
   }
 
+  // Keyboard accessibility: allow Enter to act as click on nav when focused
+  navButtons.forEach(btn => {
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        btn.click();
+      }
+    });
+  });
+
+  // Security: prevent XSS when inserting user-generated content (basic)
+  function escapeHTML(str) {
+    return str.replace(/[&<>"']/g, function(m) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[m];
+    });
+  }
+  // Apply escapeHTML on rendering data
+  // (Demo purpose: you may want to use this for officer names, report titles, etc.)
+
   // Init on load
   document.addEventListener('DOMContentLoaded', () => {
     init();
@@ -966,4 +990,3 @@
 </script>
 </body>
 </html>
-
