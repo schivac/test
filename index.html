@@ -5,132 +5,440 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Police RP Panel</title>
 <style>
-  /* === Modern Toast Notification === */
-  .toast-container {
+  /* Reset & base */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0b1335;
+    color: #e0e7ff;
+  }
+  a {
+    color: #79b8ff;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  /* Container */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+  }
+  /* Header & nav */
+  header {
+    background: #142563;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #2c59ff;
+  }
+  header h1 {
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: 2px;
+    color: #79b8ff;
+    user-select: none;
+  }
+  nav {
+    display: flex;
+    gap: 1rem;
+  }
+  nav button, nav a {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: #a3bffa;
+    padding: 0.5rem 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    line-height: 1.3;
+  }
+  nav button.active,
+  nav a.active,
+  nav button:hover,
+  nav a:hover {
+    background: #2c59ff;
+    color: #e0e7ff;
+  }
+  nav a {
+    text-decoration: none;
+  }
+  nav button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  /* Sections */
+  section {
+    display: none;
+    padding: 1.5rem 0;
+  }
+  section.active {
+    display: block;
+  }
+  /* Login form */
+  #loginSection form {
+    max-width: 380px;
+    margin: 2rem auto;
+    background: #1a237e;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 14px #304ffeaa;
+  }
+  #loginSection h2 {
+    margin-bottom: 1.2rem;
+    text-align: center;
+    color: #82aaff;
+  }
+  #loginSection label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  #loginSection input[type="text"],
+  #loginSection input[type="password"] {
+    width: 100%;
+    padding: 0.7rem;
+    margin-bottom: 1.3rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  #loginSection button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  #loginSection button:hover {
+    background: #1a40d1;
+  }
+  /* Dashboard */
+  #dashboardSection .stats-cards {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .card {
+    background: #1a237e;
+    padding: 1.4rem 2rem;
+    border-radius: 12px;
+    width: 220px;
+    text-align: center;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  .card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #82aaff;
+  }
+  .card p {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #c5cae9;
+  }
+  /* Officers List */
+  #officersSection {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #1a237e;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  #officersSection h2 {
+    text-align: center;
+    color: #82aaff;
+  }
+  form#addOfficerForm {
+    display: flex;
+    gap: 0.8rem;
+    margin: 1rem 0 1.5rem 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  form#addOfficerForm input {
+    flex: 1 1 45%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  form#addOfficerForm button {
+    flex: 1 1 100%;
+    background-color: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.7rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form#addOfficerForm button:hover {
+    background-color: #1a40d1;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e0e7ff;
+  }
+  thead tr {
+    border-bottom: 2px solid #2c59ff;
+  }
+  th, td {
+    padding: 0.8rem 0.7rem;
+    text-align: left;
+  }
+  tbody tr:nth-child(odd) {
+    background: #283593;
+  }
+  tbody tr:hover {
+    background: #3949ab;
+  }
+  button.delete-btn {
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button.delete-btn:hover {
+    background: #db3232;
+  }
+  /* Wanted Section */
+  #wantedSection {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #1a237e;
+    border-radius: 10px;
+    padding: 1.5rem 1.8rem;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  #wantedSection h2 {
+    text-align: center;
+    color: #82aaff;
+  }
+  form#wantedForm {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  form#wantedForm input {
+    flex: 1 1 45%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  form#wantedForm button {
+    flex: 1 1 100%;
+    background-color: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.7rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form#wantedForm button:hover {
+    background-color: #1a40d1;
+  }
+  ul#wantedList {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  ul#wantedList li {
+    background: #283593;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #d0d7ff;
+  }
+  button.remove-wanted {
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button.remove-wanted:hover {
+    background: #db3232;
+  }
+  /* Vehicles Section */
+  #vehiclesSection {
+    max-width: 700px;
+    margin: 0 auto;
+    background: #1a237e;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 0 15px #304ffeaa;
+  }
+  #vehiclesSection h2 {
+    text-align: center;
+    color: #82aaff;
+  }
+  form#addVehicleForm {
+    display: flex;
+    gap: 0.8rem;
+    margin: 1rem 0 1.5rem 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  form#addVehicleForm input {
+    flex: 1 1 45%;
+    padding: 0.6rem 0.8rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 1rem;
+  }
+  form#addVehicleForm button {
+    flex: 1 1 100%;
+    background-color: #2c59ff;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    padding: 0.7rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  form#addVehicleForm button:hover {
+    background-color: #1a40d1;
+  }
+  table#vehicleTable {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e0e7ff;
+  }
+  #vehicleTable thead tr {
+    border-bottom: 2px solid #2c59ff;
+  }
+  #vehicleTable th, #vehicleTable td {
+    padding: 0.8rem 0.7rem;
+    text-align: left;
+  }
+  #vehicleTable tbody tr:nth-child(odd) {
+    background: #283593;
+  }
+  #vehicleTable tbody tr:hover {
+    background: #3949ab;
+  }
+  button.delete-vehicle-btn {
+    background: #ff5c5c;
+    border: none;
+    border-radius: 4px;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+  button.delete-vehicle-btn:hover {
+    background: #db3232;
+  }
+  /* Notifications (toasts) */
+  #toastContainer {
     position: fixed;
-    top: 24px;
-    right: 24px;
+    top: 1rem;
+    right: 1rem;
     z-index: 9999;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 0.6rem;
   }
   .toast {
-    min-width: 220px;
-    max-width: 320px;
-    background: #192452ee;
-    color: #e0e7ff;
-    border-left: 6px solid #2c59ff;
-    border-radius: 8px;
-    box-shadow: 0 4px 18px #0004;
-    padding: 1rem 1.2rem;
-    font-size: 1rem;
-    animation: toast-in 0.25s;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-  }
-  .toast.success { border-color: #18d06e; }
-  .toast.error { border-color: #ff5c5c; }
-  .toast .toast-close {
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: #a3bffa;
-    font-size: 1.15rem;
-    position: absolute;
-    top: 9px;
-    right: 10px;
-    line-height: 1;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-  }
-  .toast .toast-close:hover { opacity: 1; }
-  @keyframes toast-in {
-    from { opacity: 0; transform: translateY(-20px);}
-    to   { opacity: 1; transform: translateY(0);}
-  }
-  /* === Modern Form === */
-  .modern-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.1rem;
-  }
-  .form-group {
-    position: relative;
-    margin-bottom: 0.2rem;
-  }
-  .form-input {
-    width: 100%;
-    padding: 1.05rem 0.9rem 0.6rem 0.9rem;
-    font-size: 1.1rem;
-    border: none;
-    border-bottom: 2px solid #2c59ff55;
-    background: #222b59;
-    color: #e0e7ff;
-    border-radius: 6px 6px 0 0;
-    transition: border-color .25s, box-shadow .25s;
-    outline: none;
-  }
-  .form-input:focus {
-    border-color: #2c59ff;
-    box-shadow: 0 2px 12px #2c59ff40;
-  }
-  .form-label {
-    position: absolute;
-    top: 1.05rem;
-    left: 0.95rem;
-    color: #a3bffa;
-    pointer-events: none;
-    font-size: 1rem;
-    transition: .2s cubic-bezier(.4,0,.2,1);
-    background: transparent;
-    z-index: 2;
-  }
-  .form-input:focus + .form-label,
-  .form-input:not(:placeholder-shown) + .form-label {
-    top: -0.75rem;
-    left: 0.7rem;
-    font-size: 0.90rem;
-    background: #1a237e;
-    padding: 0 0.4rem;
-    color: #2c59ff;
-    border-radius: 3px;
-  }
-  /* Modern Button */
-  .modern-btn {
-    background: linear-gradient(90deg, #2c59ff, #3e8ef7);
-    border: none;
+    background: #2c59ff;
+    color: white;
+    padding: 0.8rem 1.2rem;
     border-radius: 6px;
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 700;
-    padding: 0.85rem;
-    cursor: pointer;
-    box-shadow: 0 2px 8px #222b5933;
-    transition: background 0.25s, box-shadow 0.25s;
+    box-shadow: 0 0 8px #2c59ffbb;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateX(100%);
+    animation: slideIn 0.4s forwards, fadeOut 0.4s 4s forwards;
+    min-width: 240px;
   }
-  .modern-btn:hover, .modern-btn:focus {
-    background: linear-gradient(90deg, #1a40d1, #2c59ff);
-    box-shadow: 0 6px 18px #2c59ff33;
+  @keyframes slideIn {
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
-  /* Container and Section tweaks */
-  .container { max-width: 1100px; margin: 0 auto; padding: 1rem 1.5rem;}
-  section { padding: 1.5rem 0; }
-  /* ...other CSS from your previous code... (keep all your previous styles) */
-  /* Responsive and minimal tweaks, keep your existing responsive CSS */
+  @keyframes fadeOut {
+    to {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+  }
+  /* Footer */
+  footer {
+    text-align: center;
+    margin: 2rem 0 1rem 0;
+    color: #5c6bc0aa;
+    font-size: 0.9rem;
+    user-select: none;
+  }
+  /* Responsive */
+  @media (max-width: 700px) {
+    #officersSection, #wantedSection, #vehiclesSection {
+      padding: 1rem 1rem;
+    }
+    nav {
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+    form#addOfficerForm input,
+    form#wantedForm input,
+    form#addVehicleForm input {
+      flex: 1 1 100%;
+    }
+    form#addOfficerForm button,
+    form#wantedForm button,
+    form#addVehicleForm button {
+      flex: 1 1 100%;
+    }
+    .card {
+      width: 100%;
+    }
+  }
 </style>
 </head>
 <body>
-<div class="toast-container" id="toastContainer"></div>
 <header>
   <h1>POLICE RP PANEL</h1>
-  <nav>
+  <nav aria-label="Main navigation">
     <button id="navLogin" class="active">Login</button>
     <button id="navDashboard" disabled>Dashboard</button>
     <button id="navOfficers" disabled>Officers</button>
-    <button id="navReports" disabled>Reports</button>
+    <a id="navLaporan" href="laporan.html" target="_blank" rel="noopener" aria-disabled="true" class="disabled">Laporan</a>
     <button id="navWanted" disabled>Wanted List</button>
     <button id="navVehicles" disabled>Vehicles</button>
     <button id="navLogout" disabled>Logout</button>
@@ -138,35 +446,41 @@
 </header>
 
 <div class="container">
-  <!-- Modern Login Form -->
   <section id="loginSection" class="active" aria-label="Login Section">
-    <form id="loginForm" aria-label="Login form" class="modern-form" autocomplete="off">
-      <h2 style="text-align:center; color:#82aaff;">Officer Login</h2>
-      <div class="form-group">
-        <input type="text" id="officerName" name="officerName" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="officerName" class="form-label">Name</label>
-      </div>
-      <div class="form-group">
-        <input type="text" id="badgeNumber" name="badgeNumber" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="badgeNumber" class="form-label">Badge Number</label>
-      </div>
-      <button type="submit" class="modern-btn">Login</button>
+    <form id="loginForm" aria-label="Login form">
+      <h2>Officer Login</h2>
+      <label for="officerName">Name</label>
+      <input type="text" id="officerName" name="officerName" placeholder="Enter your name" required autocomplete="off" />
+      <label for="badgeNumber">Badge Number</label>
+      <input type="text" id="badgeNumber" name="badgeNumber" placeholder="Enter badge number" required autocomplete="off" />
+      <button type="submit" aria-label="Submit login form">Login</button>
     </form>
   </section>
 
-  <!-- Modern Add Officer Form -->
+  <section id="dashboardSection" aria-label="Dashboard Section">
+    <h2>Welcome, <span id="officerDisplayName">Officer</span></h2>
+    <div class="stats-cards" aria-live="polite" aria-atomic="true">
+      <div class="card" aria-label="Total Officers">
+        <h3>Total Officers</h3>
+        <p id="totalOfficers">0</p>
+      </div>
+      <div class="card" aria-label="Total Wanted Criminals">
+        <h3>Wanted Criminals</h3>
+        <p id="totalWanted">0</p>
+      </div>
+      <div class="card" aria-label="Total Patrol Vehicles">
+        <h3>Patrol Vehicles</h3>
+        <p id="totalVehicles">0</p>
+      </div>
+    </div>
+  </section>
+
   <section id="officersSection" aria-label="Officers Section">
     <h2>Officers List</h2>
-    <form id="addOfficerForm" aria-label="Add officer form" class="modern-form" autocomplete="off">
-      <div class="form-group">
-        <input type="text" id="newOfficerName" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="newOfficerName" class="form-label">Officer Name</label>
-      </div>
-      <div class="form-group">
-        <input type="text" id="newOfficerBadge" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="newOfficerBadge" class="form-label">Badge Number</label>
-      </div>
-      <button type="submit" class="modern-btn">Add Officer</button>
+    <form id="addOfficerForm" aria-label="Add officer form">
+      <input type="text" id="newOfficerName" placeholder="Officer Name" required autocomplete="off" />
+      <input type="text" id="newOfficerBadge" placeholder="Badge Number" required autocomplete="off" />
+      <button type="submit" aria-label="Add new officer">Add Officer</button>
     </form>
     <table aria-label="Officers table">
       <thead>
@@ -180,53 +494,22 @@
     </table>
   </section>
 
-  <!-- Modern Incident Report Form -->
-  <section id="reportsSection" aria-label="Incident Reports Section">
-    <h2>Incident Reports</h2>
-    <form id="reportForm" aria-label="Incident report form" class="modern-form" autocomplete="off">
-      <div class="form-group">
-        <input type="text" id="reportTitle" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="reportTitle" class="form-label">Title</label>
-      </div>
-      <div class="form-group">
-        <textarea id="reportDesc" class="form-input" placeholder=" " required style="min-height: 90px;"></textarea>
-        <label for="reportDesc" class="form-label">Description</label>
-      </div>
-      <button type="submit" id="submitReport" class="modern-btn">Submit Report</button>
-    </form>
-    <div class="report-list" aria-live="polite" id="reportsList"></div>
-  </section>
-
-  <!-- Modern Wanted Form -->
   <section id="wantedSection" aria-label="Wanted List Section">
     <h2>Wanted List</h2>
-    <form id="wantedForm" aria-label="Add to wanted list form" class="modern-form" autocomplete="off" style="flex-direction:row;gap:0.8rem;">
-      <div class="form-group" style="flex:1;">
-        <input type="text" id="wantedName" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="wantedName" class="form-label">Criminal Name</label>
-      </div>
-      <div class="form-group" style="flex:1;">
-        <input type="text" id="wantedCrime" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="wantedCrime" class="form-label">Crime</label>
-      </div>
-      <button type="submit" class="modern-btn" style="min-width:150px;">Add Wanted</button>
+    <form id="wantedForm" aria-label="Add to wanted list form">
+      <input type="text" id="wantedName" placeholder="Criminal Name" required autocomplete="off" />
+      <input type="text" id="wantedCrime" placeholder="Crime" required autocomplete="off" />
+      <button type="submit" aria-label="Add wanted criminal">Add Wanted</button>
     </form>
     <ul id="wantedList"></ul>
   </section>
 
-  <!-- Modern Vehicle Form -->
   <section id="vehiclesSection" aria-label="Vehicles Section">
     <h2>Patrol Vehicles</h2>
-    <form id="addVehicleForm" aria-label="Add patrol vehicle form" class="modern-form" autocomplete="off" style="flex-direction:row;gap:0.8rem;">
-      <div class="form-group" style="flex:1;">
-        <input type="text" id="vehicleModel" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="vehicleModel" class="form-label">Vehicle Model</label>
-      </div>
-      <div class="form-group" style="flex:1;">
-        <input type="text" id="vehiclePlate" class="form-input" placeholder=" " required autocomplete="off"/>
-        <label for="vehiclePlate" class="form-label">License Plate</label>
-      </div>
-      <button type="submit" class="modern-btn" style="min-width:150px;">Add Vehicle</button>
+    <form id="addVehicleForm" aria-label="Add patrol vehicle form">
+      <input type="text" id="vehicleModel" placeholder="Vehicle Model" required autocomplete="off" />
+      <input type="text" id="vehiclePlate" placeholder="License Plate" required autocomplete="off" />
+      <button type="submit" aria-label="Add vehicle">Add Vehicle</button>
     </form>
     <table id="vehicleTable" aria-label="Patrol vehicles table">
       <thead>
@@ -239,107 +522,97 @@
       <tbody id="vehiclesTableBody"></tbody>
     </table>
   </section>
-  <!-- Dashboard section unchanged (tampilkan hanya jika login) -->
-  <section id="dashboardSection" aria-label="Dashboard Section">
-    <h2>Welcome, <span id="officerDisplayName">Officer</span></h2>
-    <div class="stats-cards" aria-live="polite">
-      <div class="card" aria-label="Total Officers">
-        <h3>Total Officers</h3>
-        <p id="totalOfficers">0</p>
-      </div>
-      <div class="card" aria-label="Total Reports">
-        <h3>Total Reports</h3>
-        <p id="totalReports">0</p>
-      </div>
-      <div class="card" aria-label="Wanted Criminals">
-        <h3>Wanted Criminals</h3>
-        <p id="totalWanted">0</p>
-      </div>
-      <div class="card" aria-label="Patrol Vehicles">
-        <h3>Patrol Vehicles</h3>
-        <p id="totalVehicles">0</p>
-      </div>
-    </div>
-  </section>
 </div>
+
+<!-- Toast notification container -->
+<div id="toastContainer" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
 <footer>
   &copy; 2024 Police RP Panel. All rights reserved.
 </footer>
+
 <script>
-  // === Modern Toast ===
-  const toastContainer = document.getElementById('toastContainer');
-  function showToast(msg, type = "success", timeout = 2800) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = `<span>${msg}</span><button class="toast-close" aria-label="Close">&times;</button>`;
-    toastContainer.appendChild(toast);
-    const remove = () => { toast.classList.add("closing"); toast.remove(); };
-    toast.querySelector('.toast-close').onclick = remove;
-    setTimeout(remove, timeout);
-  }
-
-  // ... all your previous JavaScript code, but GANTI alert() dengan showToast() ...
-  // (CODE SAMA seperti sebelumnya, hanya notifikasi/alert diganti showToast)
-
+  // Elements references
   const navLogin = document.getElementById('navLogin');
   const navDashboard = document.getElementById('navDashboard');
   const navOfficers = document.getElementById('navOfficers');
-  const navReports = document.getElementById('navReports');
   const navWanted = document.getElementById('navWanted');
   const navVehicles = document.getElementById('navVehicles');
   const navLogout = document.getElementById('navLogout');
+  const navLaporan = document.getElementById('navLaporan');
+
   const sections = {
     login: document.getElementById('loginSection'),
     dashboard: document.getElementById('dashboardSection'),
     officers: document.getElementById('officersSection'),
-    reports: document.getElementById('reportsSection'),
     wanted: document.getElementById('wantedSection'),
     vehicles: document.getElementById('vehiclesSection'),
   };
+
   const loginForm = document.getElementById('loginForm');
   const officerDisplayName = document.getElementById('officerDisplayName');
+
+  // Storage keys for data
   const STORAGE = {
     USER: 'prp_user',
     OFFICERS: 'prp_officers',
-    REPORTS: 'prp_reports',
     WANTED: 'prp_wanted',
     VEHICLES: 'prp_vehicles'
   };
-  const navButtons = [navLogin, navDashboard, navOfficers, navReports, navWanted, navVehicles, navLogout];
+
+  // Navigation buttons array for easy disable-enable
+  const navButtons = [navLogin, navDashboard, navOfficers, navWanted, navVehicles, navLogout];
+
   function showSection(name) {
     for (const key in sections) {
-      if (key === name) sections[key].classList.add('active');
-      else sections[key].classList.remove('active');
+      if (key === name) {
+        sections[key].classList.add('active');
+      } else {
+        sections[key].classList.remove('active');
+      }
     }
+    // Update nav active states
     navButtons.forEach(btn => btn.classList.remove('active'));
     switch (name) {
-      case 'login': navLogin.classList.add('active'); break;
-      case 'dashboard': navDashboard.classList.add('active'); break;
-      case 'officers': navOfficers.classList.add('active'); break;
-      case 'reports': navReports.classList.add('active'); break;
-      case 'wanted': navWanted.classList.add('active'); break;
-      case 'vehicles': navVehicles.classList.add('active'); break;
+      case 'login':
+        navLogin.classList.add('active'); break;
+      case 'dashboard':
+        navDashboard.classList.add('active'); break;
+      case 'officers':
+        navOfficers.classList.add('active'); break;
+      case 'wanted':
+        navWanted.classList.add('active'); break;
+      case 'vehicles':
+        navVehicles.classList.add('active'); break;
     }
   }
+
   function setLoggedInUI(user) {
     officerDisplayName.textContent = user.name;
     navDashboard.disabled = false;
     navOfficers.disabled = false;
-    navReports.disabled = false;
     navWanted.disabled = false;
     navVehicles.disabled = false;
     navLogout.disabled = false;
     navLogin.disabled = true;
+    navLaporan.setAttribute('aria-disabled', 'false');
+    navLaporan.classList.remove('disabled');
+    navLaporan.style.pointerEvents = 'auto';
   }
+
   function setLoggedOutUI() {
     navDashboard.disabled = true;
     navOfficers.disabled = true;
-    navReports.disabled = true;
     navWanted.disabled = true;
     navVehicles.disabled = true;
     navLogout.disabled = true;
     navLogin.disabled = false;
+    navLaporan.setAttribute('aria-disabled', 'true');
+    navLaporan.classList.add('disabled');
+    navLaporan.style.pointerEvents = 'none';
   }
+
+  // Initialization function
   function init() {
     const savedUser = JSON.parse(localStorage.getItem(STORAGE.USER));
     if (savedUser && savedUser.name && savedUser.badge) {
@@ -351,20 +624,35 @@
       showSection('login');
     }
   }
-  navLogin.addEventListener('click', () => showSection('login'));
-  navDashboard.addEventListener('click', () => { showSection('dashboard'); updateDashboard(); });
-  navOfficers.addEventListener('click', () => { showSection('officers'); renderOfficers(); });
-  navReports.addEventListener('click', () => { showSection('reports'); renderReports(); });
-  navWanted.addEventListener('click', () => { showSection('wanted'); renderWanted(); });
-  navVehicles.addEventListener('click', () => { showSection('vehicles'); renderVehicles(); });
+
+  // Event handlers for navigation
+  navLogin.addEventListener('click', () => {
+    showSection('login');
+  });
+  navDashboard.addEventListener('click', () => {
+    showSection('dashboard');
+    updateDashboard();
+  });
+  navOfficers.addEventListener('click', () => {
+    showSection('officers');
+    renderOfficers();
+  });
+  navWanted.addEventListener('click', () => {
+    showSection('wanted');
+    renderWanted();
+  });
+  navVehicles.addEventListener('click', () => {
+    showSection('vehicles');
+    renderVehicles();
+  });
   navLogout.addEventListener('click', () => {
     localStorage.removeItem(STORAGE.USER);
     setLoggedOutUI();
     showSection('login');
-    showToast("Logout successful!", "success");
+    showToast("Logged out successfully.");
   });
 
-  // === Login Form ===
+  // Login form submit
   loginForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = loginForm.officerName.value.trim();
@@ -376,13 +664,14 @@
       showSection('dashboard');
       updateAllData();
       loginForm.reset();
-      showToast("Login successful!", "success");
+      showToast(`Welcome ${name}!`);
     }
   });
 
-  // === Officers Section ===
+  // ========== Officers Section ==========
   const addOfficerForm = document.getElementById('addOfficerForm');
   const officersTableBody = document.getElementById('officersTableBody');
+
   function getOfficers() {
     const officers = JSON.parse(localStorage.getItem(STORAGE.OFFICERS));
     return Array.isArray(officers) ? officers : [];
@@ -406,22 +695,26 @@
       `;
       officersTableBody.appendChild(tr);
     });
-    officersTableBody.querySelectorAll('.delete-btn').forEach(btn => {
+    // Hook delete buttons
+    const deleteButtons = officersTableBody.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const idx = e.target.getAttribute('data-index');
         if (idx !== null) {
-          if (confirm('Are you sure you want to delete this officer?')) {
+          const confirmed = confirm('Are you sure you want to delete this officer?');
+          if (confirmed) {
             const officers = getOfficers();
             officers.splice(idx,1);
             saveOfficers(officers);
             renderOfficers();
             updateDashboard();
-            showToast("Officer deleted!", "success");
+            showToast("Officer deleted.");
           }
         }
       });
     });
   }
+
   addOfficerForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const name = document.getElementById('newOfficerName').value.trim();
@@ -429,7 +722,7 @@
     if (name && badge) {
       let officers = getOfficers();
       if (officers.find(o => o.badge === badge)) {
-        showToast('Badge number already exists!', "error");
+        alert('Badge number already exists!');
         return;
       }
       officers.push({ name, badge });
@@ -437,62 +730,14 @@
       addOfficerForm.reset();
       renderOfficers();
       updateDashboard();
-      showToast("Officer added!", "success");
+      showToast("Officer added.");
     }
   });
 
-  // === Reports Section ===
-  const reportForm = document.getElementById('reportForm');
-  const reportsList = document.getElementById('reportsList');
-  function getReports() {
-    const reports = JSON.parse(localStorage.getItem(STORAGE.REPORTS));
-    return Array.isArray(reports) ? reports : [];
-  }
-  function saveReports(reports) {
-    localStorage.setItem(STORAGE.REPORTS, JSON.stringify(reports));
-  }
-  function renderReports() {
-    const reports = getReports();
-    reportsList.innerHTML = '';
-    if (reports.length === 0) {
-      reportsList.innerHTML = '<p style="text-align:center; color:#a3bffa;">No reports submitted yet.</p>';
-      return;
-    }
-    reports.forEach((report, index) => {
-      const div = document.createElement('div');
-      div.className = 'report-item';
-      div.innerHTML = `
-        <h4>${report.title}</h4>
-        <p>${report.description}</p>
-        <small>Reported by: ${report.reportedBy} on ${new Date(report.timestamp).toLocaleString()}</small>
-      `;
-      reportsList.appendChild(div);
-    });
-  }
-  reportForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const title = document.getElementById('reportTitle').value.trim();
-    const desc = document.getElementById('reportDesc').value.trim();
-    if (title && desc) {
-      const reports = getReports();
-      const user = JSON.parse(localStorage.getItem(STORAGE.USER));
-      reports.unshift({
-        title,
-        description: desc,
-        reportedBy: user ? user.name : 'Unknown',
-        timestamp: Date.now()
-      });
-      saveReports(reports);
-      renderReports();
-      reportForm.reset();
-      updateDashboard();
-      showToast('Report submitted successfully.', "success");
-    }
-  });
-
-  // === Wanted Section ===
+  // ========== Wanted Section ==========
   const wantedForm = document.getElementById('wantedForm');
   const wantedList = document.getElementById('wantedList');
+
   function getWanted() {
     const wanted = JSON.parse(localStorage.getItem(STORAGE.WANTED));
     return Array.isArray(wanted) ? wanted : [];
@@ -515,13 +760,13 @@
       btn.setAttribute('aria-label', `Remove wanted criminal ${w.name}`);
       btn.textContent = 'Remove';
       btn.addEventListener('click', () => {
-        if (confirm(`Remove ${w.name} from wanted list?`)) {
-          const wanted = getWanted();
+        const confirmed = confirm(`Remove ${w.name} from wanted list?`);
+        if (confirmed) {
           wanted.splice(index, 1);
           saveWanted(wanted);
           renderWanted();
           updateDashboard();
-          showToast('Criminal removed from wanted list.', "success");
+          showToast("Wanted criminal removed.");
         }
       });
       li.appendChild(btn);
@@ -539,13 +784,14 @@
       wantedForm.reset();
       renderWanted();
       updateDashboard();
-      showToast('Criminal added to wanted list.', "success");
+      showToast("Wanted criminal added.");
     }
   });
 
-  // === Vehicles Section ===
+  // ========== Vehicles Section ==========
   const addVehicleForm = document.getElementById('addVehicleForm');
   const vehiclesTableBody = document.getElementById('vehiclesTableBody');
+
   function getVehicles() {
     const vehicles = JSON.parse(localStorage.getItem(STORAGE.VEHICLES));
     return Array.isArray(vehicles) ? vehicles : [];
@@ -569,17 +815,19 @@
       `;
       vehiclesTableBody.appendChild(tr);
     });
-    vehiclesTableBody.querySelectorAll('.delete-vehicle-btn').forEach(btn => {
+    const deleteVehicleButtons = vehiclesTableBody.querySelectorAll('.delete-vehicle-btn');
+    deleteVehicleButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const idx = e.target.getAttribute('data-index');
         if (idx !== null) {
-          if (confirm('Are you sure you want to delete this vehicle?')) {
+          const confirmed = confirm('Are you sure you want to delete this vehicle?');
+          if (confirmed) {
             const vehicles = getVehicles();
             vehicles.splice(idx, 1);
             saveVehicles(vehicles);
             renderVehicles();
             updateDashboard();
-            showToast("Vehicle deleted!", "success");
+            showToast("Vehicle deleted.");
           }
         }
       });
@@ -592,7 +840,7 @@
     if (model && plate) {
       let vehicles = getVehicles();
       if (vehicles.find(v => v.plate === plate)) {
-        showToast("License plate already exists!", "error");
+        alert('License plate already exists!');
         return;
       }
       vehicles.push({ model, plate });
@@ -600,33 +848,51 @@
       addVehicleForm.reset();
       renderVehicles();
       updateDashboard();
-      showToast("Vehicle added!", "success");
+      showToast("Vehicle added.");
     }
   });
 
   // Update dashboard stats
   const totalOfficersElem = document.getElementById('totalOfficers');
-  const totalReportsElem = document.getElementById('totalReports');
   const totalWantedElem = document.getElementById('totalWanted');
   const totalVehiclesElem = document.getElementById('totalVehicles');
+
   function updateDashboard() {
     const totalOfficers = getOfficers().length;
-    const totalReports = getReports().length;
     const totalWanted = getWanted().length;
     const totalVehicles = getVehicles().length;
     totalOfficersElem.textContent = totalOfficers;
-    totalReportsElem.textContent = totalReports;
     totalWantedElem.textContent = totalWanted;
     totalVehiclesElem.textContent = totalVehicles;
   }
+
   function updateAllData() {
     updateDashboard();
     renderOfficers();
-    renderReports();
     renderWanted();
     renderVehicles();
   }
-  document.addEventListener('DOMContentLoaded', () => { init(); });
+
+  // Toast notification system
+  const toastContainer = document.getElementById('toastContainer');
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    toastContainer.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add('hide');
+      toast.addEventListener('animationend', () => {
+        toast.remove();
+      });
+    }, 4500);
+  }
+
+  // Init on load
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+  });
 </script>
 </body>
 </html>
+
